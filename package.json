@@ -1,0 +1,13 @@
+{
+  "name": "catering-crm",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "description": "Meal-prep subscription + venue-event catering CRM for independent chefs.",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "engines": { "node": ">=22" }
+}

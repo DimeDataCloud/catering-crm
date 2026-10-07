@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#faf6ef">
+<meta name="format-detection" content="telephone=no">
+<title>Kitchen OS</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  body{display:flex; align-items:center; justify-content:center; min-height:100vh}
+  .login-wrap{width:min(380px,92vw); display:flex; flex-direction:column; gap:22px}
+  .login-brand{display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center}
+  .login-mark{width:56px; height:56px; border-radius:16px; background:var(--accent); color:var(--accent-ink); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:26px; font-weight:600}
+  .login-card{padding:26px 26px 22px}
+  .err-line{color:var(--danger); font-size:12.5px; font-weight:600; min-height:16px; margin-top:-4px}
+  .login-foot{text-align:center; font-size:11.5px; color:var(--ink-faint)}
+</style>
+</head>
+<body>
+<div class="scrim"></div>
+<div class="login-wrap">
+  <div class="login-brand">
+    <div class="login-mark">KO</div>
+    <h1 style="font-size:20px">Kitchen OS</h1>
+    <div class="sub" style="color:var(--ink-faint); font-size:12.5px">Meal prep &amp; event catering</div>
+  </div>
+  <form class="card login-card" id="loginForm">
+    <div class="field">
+      <label for="email">Username</label>
+      <input id="email" type="text" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="pass">Password</label>
+      <input id="pass" type="password" autocomplete="current-password" required>
+    </div>
+    <div class="err-line" id="errLine"></div>
+    <button class="btn primary" type="submit" style="width:100%; justify-content:center" id="submitBtn">Sign in</button>
+  </form>
+  <div class="login-foot">Built by Dime Data</div>
+</div>
+<script>
+  const form = document.getElementById('loginForm');
+  const errLine = document.getElementById('errLine');
+  const submitBtn = document.getElementById('submitBtn');
+  const qsEmail = new URLSearchParams(location.search).get('email');
+  if (qsEmail) document.getElementById('email').value = qsEmail;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errLine.textContent = '';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Signing in…';
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: document.getElementById('email').value.trim(),
+          pass: document.getElementById('pass').value,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || 'Sign-in failed');
+      }
+      window.location.href = '/';
+    } catch (err) {
+      errLine.textContent = err.message;
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign in';
+    }
+  });
+</script>
+</body>
+</html>
