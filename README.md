@@ -36,8 +36,8 @@ node server/index.js     # http://localhost:3011
 No `npm install`. The first boot creates `data/chef.db` and seeds demo data: 5 subscribers,
 11 meals, 4 events and 6 payments, so there's something to look at straight away.
 
-Sign in as `owner@example.com` / `changeme2026`, or set `ADMIN_EMAIL` and `ADMIN_PASSWORD`
-before the first boot. All settings are in [`.env.example`](.env.example).
+Set `ADMIN_EMAIL` and `ADMIN_PASSWORD` before the first boot. If you don't, the seeded
+`owner@example.com` account gets a random password that is printed once in the server log. All settings are in [`.env.example`](.env.example).
 
 With Docker:
 
