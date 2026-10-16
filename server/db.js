@@ -157,10 +157,12 @@ const DEFAULT_EVENT_TYPES = [
 
 export function seed() {
   if (!db.prepare('SELECT COUNT(*) c FROM users').get().c) {
-    const pw = process.env.ADMIN_PASSWORD || 'changeme2026';
+    // No shared default password: without ADMIN_PASSWORD a random one is generated and printed once.
+    const generated = !process.env.ADMIN_PASSWORD;
+    const pw = process.env.ADMIN_PASSWORD || randomBytes(12).toString('base64url');
     db.prepare('INSERT INTO users (email,name,role,pw,created_at) VALUES (?,?,?,?,?)')
       .run((process.env.ADMIN_EMAIL || 'owner@example.com').toLowerCase().trim(), process.env.ADMIN_NAME || 'Owner', 'owner', hashPw(pw), now());
-    if (!process.env.ADMIN_PASSWORD) console.warn('[auth] ADMIN_PASSWORD not set: seeded owner uses the default password, change it after first login');
+    if (generated) console.warn(`[auth] ADMIN_PASSWORD not set: seeded owner password is ${pw} (shown once, change it after first login)`);
   }
 
   if (!db.prepare('SELECT COUNT(*) c FROM meals').get().c) {
